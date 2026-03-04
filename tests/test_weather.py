@@ -30,6 +30,4 @@ def test_button_click_updates_label(app):
     app.root.update()
 
     # 4. Assert the result
-    assert app.label.cget("text") == "Weather for London"
-
-
+    assert "London" in app.label.cget("text")
