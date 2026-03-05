@@ -40,9 +40,18 @@ class WeatherApp:
         self.duration_input = tk.Spinbox(root, from_=1, to=14, increment=1, name="duration_entry")
         self.duration_input.pack()
 
-        self.submit_btn = tk.Button(root, text="Get Weather", command=self.update_label, name="submit_btn")
+        self.submit_btn = tk.Button(root, text="Add City", command=self.update_label, name="submit_btn")
         self.submit_btn.pack()
 
+        self.forecast_container = tk.Frame(root, name="forecast_container")
+        self.forecast_container.pack(padx=20, pady=10, fill="x")
+        
+    def add_forecast_row(self, city, temp):
+        row = tk.Frame(self.forecast_container, relief="groove", borderwidth=1)
+        row.pack(fill="x", pady=2)
+
+        tk.Label(row, text=city, width=20, anchor="w").grid(row=0, column=0, padx=5)
+        tk.Label(row, text=temp, width=15).grid(row=0, column=1, padx=5)
 
     def update_label(self):
         city = self.city_input.get()
