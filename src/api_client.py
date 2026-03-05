@@ -61,17 +61,11 @@ def get_coordinates(city_name: str) -> tuple[float, float]:
     Use the Open-Meteo Geocoding API to resolve *city_name* into
     geographic coordinates.
 
-    Returns
-    -------
-    tuple[float, float]
-        (latitude, longitude)
+    Returns (latitude, longitude)
 
-    Raises
-    ------
-    ValueError
-        If the city cannot be found.
-    ConnectionError / Exception
-        If the HTTP request itself fails.
+    ValueError - If the city cannot be found.
+    ConnectionError / Exception - If the HTTP request itself fails.
+
     """
     response = requests.get(
         GEOCODING_URL,
@@ -95,8 +89,7 @@ def get_weather(city_name: str, date: datetime.date) -> dict:
     """
     Fetch the daily weather forecast for *city_name* on *date*.
 
-    Returns
-    -------
+    Returns:
     dict
         {
             "city":      str,
@@ -108,10 +101,7 @@ def get_weather(city_name: str, date: datetime.date) -> dict:
         If the API has no data for the requested date the temperatures are
         set to ``None`` and ``condition`` is ``"Data Unavailable"`` (REQ-2.2).
 
-    Raises
-    ------
-    ValueError
-        If the city cannot be geocoded.
+    ValueError If the city cannot be geocoded.
     """
     lat, lon = get_coordinates(city_name)
 
