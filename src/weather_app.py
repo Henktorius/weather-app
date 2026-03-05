@@ -34,8 +34,15 @@ class WeatherApp:
         self.city_input = tk.Entry(root, name="city_entry")
         self.city_input.pack()
 
+        self.duration_label = tk.Label(root, text="Enter duration:", name="duration_label")
+        self.duration_label.pack()
+
+        self.duration_input = tk.Spinbox(root, from_=1, to=14, increment=1, name="duration_entry")
+        self.duration_input.pack()
+
         self.submit_btn = tk.Button(root, text="Get Weather", command=self.update_label, name="submit_btn")
         self.submit_btn.pack()
+
 
     def update_label(self):
         city = self.city_input.get()
