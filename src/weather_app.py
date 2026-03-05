@@ -19,22 +19,22 @@ class WeatherApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Weather")
+        self.root.geometry("600x400")
 
         self.trip = Trip(datetime.date.today())
 
-        self.label = tk.Label(root, text="Enter Startdate:")
+        self.label = tk.Label(root, text="Enter Startdate:", name="startdate_label")
         self.label.pack()
-        self.startdatepicker = DateEntry(root)
+        self.startdatepicker = DateEntry(root, name="startdate_entry")
         self.startdatepicker.pack()
 
-
-        self.label = tk.Label(root, text="Enter City:")
+        self.label = tk.Label(root, text="Enter City:", name="cityinput_label")
         self.label.pack()
 
-        self.city_input = tk.Entry(root)
+        self.city_input = tk.Entry(root, name="city_entry")
         self.city_input.pack()
 
-        self.submit_btn = tk.Button(root, text="Get Weather", command=self.update_label)
+        self.submit_btn = tk.Button(root, text="Get Weather", command=self.update_label, name="submit_btn")
         self.submit_btn.pack()
 
     def update_label(self):
