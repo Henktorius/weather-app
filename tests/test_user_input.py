@@ -21,3 +21,22 @@ def test_date_input(app):
     date = app.startdatepicker
     date.set_date(datetime.date(2026, 3, 10))
     assert date.get_date() == datetime.date(2026, 3, 10)
+
+def test_submit_data(app):
+    app.root.update()
+
+    city = app.root.nametowidget("city_entry")
+    city.delete(0, tk.END)
+    city.insert(0, "London")
+
+    duration = app.root.nametowidget("duration_entry")
+    duration.delete(0, tk.END)
+    duration.insert(0, 10)
+
+    date = app.startdatepicker
+    date.set_date(datetime.date.today())
+
+    try:
+        app.submit_btn.invoke()
+    except Exception as e:
+        print(e)
