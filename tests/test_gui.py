@@ -13,22 +13,42 @@ def app():
     root.destroy()
 
 
-def test_components(app):
-    """Check if the required components are present."""
-    app.root.update()  # Ensure all components are rendered
-
+def test_city_entry_component(app):
+    """Check if the city entry component is present."""
+    app.root.update()
+    city_label = app.root.nametowidget("cityinput_label")
+    assert city_label.winfo_exists()
     city_textfield = app.root.nametowidget("city_entry")
-    startdate_label = app.root.nametowidget("startdate_label")
-    submit_btn = app.root.nametowidget("submit_btn")
-    duration_label = app.root.nametowidget("duration_label")
-    duration_entry = app.root.nametowidget("duration_entry")
-    forecast_container = app.root.nametowidget("forecast_container")
-
     assert city_textfield.winfo_exists()
+
+
+def test_startdate_label_component(app):
+    """Check if the start date label component is present."""
+    app.root.update()
+    startdate_label = app.root.nametowidget("startdate_label")
     assert startdate_label.winfo_exists()
+
+
+def test_submit_btn_component(app):
+    """Check if the submit button component is present."""
+    app.root.update()
+    submit_btn = app.root.nametowidget("submit_btn")
     assert submit_btn.winfo_exists()
+
+
+def test_duration_entry_component(app):
+    """Check if the duration entry component is present."""
+    app.root.update()
+    duration_label = app.root.nametowidget("duration_label")
     assert duration_label.winfo_exists()
+    duration_entry = app.root.nametowidget("duration_entry")
     assert duration_entry.winfo_exists()
+
+
+def test_forecast_container_component(app):
+    """Check if the forecast container component is present."""
+    app.root.update()
+    forecast_container = app.root.nametowidget("forecast_container")
     assert forecast_container.winfo_exists()
 
 
