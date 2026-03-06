@@ -1,18 +1,3 @@
-import tkinter as tk
-import pytest
-from src.weather_app import WeatherApp
-
-
-@pytest.fixture
-def app():
-    """Fixture to initialize the tk root and the app."""
-    root = tk.Tk()
-    app = WeatherApp(root)
-    yield app
-    # Clean up after the test is done
-    root.destroy()
-
-
 def test_components(app):
     """Check if the required components are present."""
     app.root.update()  # Ensure all components are rendered
