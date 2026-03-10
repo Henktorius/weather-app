@@ -13,8 +13,8 @@ def test_city_input(app):
     app.root.update()
     city = app.root.nametowidget("city_entry")
     city.delete(0, tk.END)
-    city.insert(0, "London")
-    assert city.get() == "London"
+    city.insert(0, "Karlskrona")
+    assert city.get() == "Karlskrona"
 
 def test_date_input(app):
     app.root.update()
@@ -27,7 +27,7 @@ def test_submit_data(app):
 
     city = app.root.nametowidget("city_entry")
     city.delete(0, tk.END)
-    city.insert(0, "London")
+    city.insert(0, "Karlskrona")
 
     duration = app.root.nametowidget("duration_entry")
     duration.delete(0, tk.END)

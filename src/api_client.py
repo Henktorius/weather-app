@@ -85,12 +85,13 @@ def get_coordinates(city_name: str) -> tuple[float, float]:
 
 # ── Weather forecast ──────────────────────────────────────────────────────────
 
-def get_weather(city_name: str, date: datetime.date) -> dict:
+def get_weather(city_name: str, date: datetime.date, end: datetime.date) -> list[dict]:
     """
-    Fetch the daily weather forecast for *city_name* on *date*.
+    Fetch the daily weather forecast for *city_name* from *date* to *end*.
 
     Returns:
-    dict
+    list[dict]
+        A list of dictionaries, where each dict has:
         {
             "city":      str,
             "date":      str   (ISO format),
@@ -106,6 +107,7 @@ def get_weather(city_name: str, date: datetime.date) -> dict:
     lat, lon = get_coordinates(city_name)
 
     date_str = date.isoformat()
+    end_date = end.isoformat()
 
     response = requests.get(
         FORECAST_URL,
@@ -113,7 +115,7 @@ def get_weather(city_name: str, date: datetime.date) -> dict:
             "latitude": lat,
             "longitude": lon,
             "start_date": date_str,
-            "end_date": date_str,
+            "end_date": end_date,
             "daily": "temperature_2m_max,temperature_2m_min,weathercode",
             "timezone": "auto",
         },
@@ -126,22 +128,26 @@ def get_weather(city_name: str, date: datetime.date) -> dict:
     times = daily.get("time", [])
 
     if not times:
-        return {
+        return [{
             "city": city_name,
             "date": date_str,
             "max_temp": None,
             "min_temp": None,
             "condition": "Data Unavailable",
-        }
+        }]
 
-    max_temp = daily["temperature_2m_max"][0]
-    min_temp = daily["temperature_2m_min"][0]
-    weathercode = daily["weathercode"][0]
+    forecasts = []
+    for i, t in enumerate(times):
+        max_temp = daily["temperature_2m_max"][i]
+        min_temp = daily["temperature_2m_min"][i]
+        weathercode = daily["weathercode"][i]
+        
+        forecasts.append({
+            "city": city_name,
+            "date": t,
+            "max_temp": max_temp,
+            "min_temp": min_temp,
+            "condition": interpret_weathercode(weathercode),
+        })
 
-    return {
-        "city": city_name,
-        "date": date_str,
-        "max_temp": max_temp,
-        "min_temp": min_temp,
-        "condition": interpret_weathercode(weathercode),
-    }
+    return forecasts

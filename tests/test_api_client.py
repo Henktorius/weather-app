@@ -43,7 +43,7 @@ class TestGetCoordinates:
             "results": [
                 {
                     "id": 2643743,
-                    "name": "London",
+                    "name": "Karlskrona",
                     "latitude": 51.50853,
                     "longitude": -0.12574,
                     "country": "United Kingdom",
@@ -52,7 +52,7 @@ class TestGetCoordinates:
         }
         mock_get.return_value = mock_response
 
-        lat, lon = get_coordinates("London")
+        lat, lon = get_coordinates("Karlskrona")
 
         assert isinstance(lat, float)
         assert isinstance(lon, float)
@@ -90,7 +90,7 @@ class TestGetCoordinates:
         mock_get.return_value = mock_response
 
         with pytest.raises(Exception):
-            get_coordinates("London")
+            get_coordinates("Karlskrona")
 
 
 # ---------------------------------------------------------------------------
@@ -108,7 +108,7 @@ class TestGetWeather:
         geo_response.status_code = 200
         geo_response.json.return_value = {
             "results": [
-                {"name": "London", "latitude": 51.5, "longitude": -0.1}
+                {"name": "Karlskrona", "latitude": 51.5, "longitude": -0.1}
             ]
         }
 
@@ -125,15 +125,18 @@ class TestGetWeather:
 
         mock_get.side_effect = [geo_response, forecast_response]
 
-        result = get_weather("London", datetime.date(2026, 3, 10))
+        result = get_weather("Karlskrona", datetime.date(2026, 3, 10), datetime.date(2026, 3, 10))
 
         # Structure checks
-        assert isinstance(result, dict)
-        assert "city" in result
-        assert "date" in result
-        assert "max_temp" in result
-        assert "min_temp" in result
-        assert "condition" in result
+        assert isinstance(result, list)
+        assert len(result) == 1
+        day = result[0]
+        assert isinstance(day, dict)
+        assert "city" in day
+        assert "date" in day
+        assert "max_temp" in day
+        assert "min_temp" in day
+        assert "condition" in day
 
     @patch("src.api_client.requests.get")
     def test_temperatures_are_numeric(self, mock_get):
@@ -158,10 +161,10 @@ class TestGetWeather:
         }
         mock_get.side_effect = [geo_response, forecast_response]
 
-        result = get_weather("Berlin", datetime.date(2026, 3, 10))
+        result = get_weather("Berlin", datetime.date(2026, 3, 10), datetime.date(2026, 3, 10))
 
-        assert isinstance(result["max_temp"], (int, float))
-        assert isinstance(result["min_temp"], (int, float))
+        assert isinstance(result[0]["max_temp"], (int, float))
+        assert isinstance(result[0]["min_temp"], (int, float))
 
     @patch("src.api_client.requests.get")
     def test_max_temp_greater_or_equal_min_temp(self, mock_get):
@@ -186,9 +189,9 @@ class TestGetWeather:
         }
         mock_get.side_effect = [geo_response, forecast_response]
 
-        result = get_weather("Madrid", datetime.date(2026, 3, 10))
+        result = get_weather("Madrid", datetime.date(2026, 3, 10), datetime.date(2026, 3, 10))
 
-        assert result["max_temp"] >= result["min_temp"]
+        assert result[0]["max_temp"] >= result[0]["min_temp"]
 
     @patch("src.api_client.requests.get")
     def test_city_name_in_response(self, mock_get):
@@ -213,9 +216,9 @@ class TestGetWeather:
         }
         mock_get.side_effect = [geo_response, forecast_response]
 
-        result = get_weather("Stockholm", datetime.date(2026, 3, 10))
+        result = get_weather("Stockholm", datetime.date(2026, 3, 10), datetime.date(2026, 3, 10))
 
-        assert result["city"] == "Stockholm"
+        assert result[0]["city"] == "Stockholm"
 
     @patch("src.api_client.requests.get")
     def test_condition_is_string(self, mock_get):
@@ -240,10 +243,10 @@ class TestGetWeather:
         }
         mock_get.side_effect = [geo_response, forecast_response]
 
-        result = get_weather("Oslo", datetime.date(2026, 3, 10))
+        result = get_weather("Oslo", datetime.date(2026, 3, 10), datetime.date(2026, 3, 10))
 
-        assert isinstance(result["condition"], str)
-        assert len(result["condition"]) > 0
+        assert isinstance(result[0]["condition"], str)
+        assert len(result[0]["condition"]) > 0
 
     @patch("src.api_client.requests.get")
     def test_missing_data_returns_unavailable(self, mock_get):
@@ -252,7 +255,7 @@ class TestGetWeather:
         geo_response.status_code = 200
         geo_response.json.return_value = {
             "results": [
-                {"name": "London", "latitude": 51.5, "longitude": -0.1}
+                {"name": "Karlskrona", "latitude": 51.5, "longitude": -0.1}
             ]
         }
 
@@ -268,9 +271,9 @@ class TestGetWeather:
         }
         mock_get.side_effect = [geo_response, forecast_response]
 
-        result = get_weather("London", datetime.date(2030, 1, 1))
+        result = get_weather("Karlskrona", datetime.date(2030, 1, 1), datetime.date(2030, 1, 1))
 
-        assert result["condition"] == "Data Unavailable"
+        assert result[0]["condition"] == "Data Unavailable"
 
     @patch("src.api_client.requests.get")
     def test_invalid_city_raises(self, mock_get):
@@ -281,4 +284,4 @@ class TestGetWeather:
         mock_get.return_value = mock_response
 
         with pytest.raises(ValueError, match="City not found"):
-            get_weather("XYZNONEXISTENT", datetime.date(2026, 3, 10))
+            get_weather("XYZNONEXISTENT", datetime.date(2026, 3, 10), datetime.date(2026, 3, 10))

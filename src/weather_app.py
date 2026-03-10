@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import datetime
 from tkcalendar import DateEntry
+from src.api_client import get_weather
 
 
 class Trip:
@@ -14,6 +15,9 @@ class Trip:
     
     def get_days(self):
         return self.days
+    
+    def __len__(self):
+        return len(self.days)
 
     def update_startdate(self, new_date: datetime.date):
         self.startdate = new_date
@@ -67,21 +71,29 @@ class WeatherApp:
         if self.duration_input.get() == "" or self.duration_input.get().isnumeric() == False or int(self.duration_input.get()) <= 0 or int(self.duration_input.get()) > 14:
             messagebox.showerror("Error", "Please enter a valid duration")
             raise ValueError("Please enter a valid duration")
+
+        city = self.city_input.get()
+        duration = int(self.duration_input.get())
+        start_date = self.startdatepicker.get_date()
+        first_day = start_date + datetime.timedelta(days=len(self.trip))
+        last_day = first_day + datetime.timedelta(days=duration-1)
+        forecast = get_weather(city, first_day, last_day)
+        
+        # fill datastructure
+        for day_data in forecast:
+            date_str = day_data["date"]
+            temp_str = f"{day_data['max_temp']}°C" if day_data["max_temp"] is not None else "N/A"
+            self.trip.add_day((f"{city} ({date_str})", temp_str))
+
+        for days in self.trip.days[-int(duration) :]:
+            self.add_forecast_row(days[0], days[1])        
         
     def add_forecast_row(self, city, temp):
         row = tk.Frame(self.forecast_container, relief="groove", borderwidth=1)
         row.pack(fill="x", pady=2)
 
         tk.Label(row, text=city, width=20, anchor="w").grid(row=0, column=0, padx=5)
-        tk.Label(row, text=temp, width=15).grid(row=0, column=1, padx=5)
-
-    def update_label(self):
-        city = self.city_input.get()
-        duration = self.duration_input.get()
-        # fill datastructure
-
-        for days in self.trip.days[-int(duration) :]:
-            self.add_forecast_row(days[0], days[1])
+        tk.Label(row, text=temp, width=15).grid(row=0, column=1, padx=5)        
 
 
 if __name__ == "__main__":
