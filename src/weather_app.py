@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import datetime
 from tkcalendar import DateEntry
 
@@ -10,12 +11,16 @@ class Trip:
 
     def add_day(self, day: tuple[str, float]):
         self.days.append(day)
+    
+    def get_days(self):
+        return self.days
 
     def update_startdate(self, new_date: datetime.date):
         self.startdate = new_date
 
 
 class WeatherApp:
+
     def __init__(self, root):
         self.root = root
         self.root.title("Weather")
@@ -44,14 +49,25 @@ class WeatherApp:
         )
         self.duration_input.pack()
 
-        self.submit_btn = tk.Button(
-            root, text="Add City", command=self.update_label, name="submit_btn"
-        )
+        self.submit_btn = tk.Button(root, text="Add City", command=self.get_data, name="submit_btn")
         self.submit_btn.pack()
 
         self.forecast_container = tk.Frame(root, name="forecast_container")
         self.forecast_container.pack(padx=20, pady=10, fill="x")
 
+    def get_data(self):
+        if self.startdatepicker.get_date() is None or self.startdatepicker.get_date() < datetime.date.today():
+            messagebox.showerror("Error", "Please select a valid startdate")
+            raise ValueError("Please select a valid startdate")
+        
+        if self.city_input.get() == "":
+            messagebox.showerror("Error", "Please enter a city")
+            raise ValueError("Please enter a city")
+        
+        if self.duration_input.get() == "" or self.duration_input.get().isnumeric() == False or int(self.duration_input.get()) <= 0 or int(self.duration_input.get()) > 14:
+            messagebox.showerror("Error", "Please enter a valid duration")
+            raise ValueError("Please enter a valid duration")
+        
     def add_forecast_row(self, city, temp):
         row = tk.Frame(self.forecast_container, relief="groove", borderwidth=1)
         row.pack(fill="x", pady=2)
