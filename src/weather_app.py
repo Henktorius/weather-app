@@ -39,10 +39,14 @@ class WeatherApp:
         self.city_input = tk.Entry(root, name="city_entry")
         self.city_input.pack()
 
-        self.duration_label = tk.Label(root, text="Enter duration:", name="duration_label")
+        self.duration_label = tk.Label(
+            root, text="Enter duration:", name="duration_label"
+        )
         self.duration_label.pack()
 
-        self.duration_input = tk.Spinbox(root, from_=1, to=14, increment=1, name="duration_entry")
+        self.duration_input = tk.Spinbox(
+            root, from_=1, to=14, increment=1, name="duration_entry"
+        )
         self.duration_input.pack()
 
         self.submit_btn = tk.Button(root, text="Add City", command=self.get_data, name="submit_btn")
@@ -73,8 +77,11 @@ class WeatherApp:
 
     def update_label(self):
         city = self.city_input.get()
-        if city:
-            self.label.config(text=f"Weather for {city} on {self.trip.startdate}")
+        duration = self.duration_input.get()
+        # fill datastructure
+
+        for days in self.trip.days[-int(duration) :]:
+            self.add_forecast_row(days[0], days[1])
 
 
 if __name__ == "__main__":
