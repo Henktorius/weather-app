@@ -1,7 +1,5 @@
 import datetime
 
-from tests.conftest import app
-
 
 class TestGUIComponents:
     """Check if all necessary components are present."""

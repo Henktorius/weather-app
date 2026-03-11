@@ -1,8 +1,10 @@
+import datetime
 import tkinter as tk
 from tkinter import messagebox
-import datetime
+
 from tkcalendar import DateEntry
-from api_client import get_weather
+
+from src.api_client import get_weather
 
 
 class Trip:
