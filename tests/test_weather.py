@@ -44,7 +44,7 @@ def test_weather_data(mock_get_weather, app):
     # After submit, check that data was added to the data structure
     assert len(app.trip) == 2
     days = app.trip.get_days()
-    assert days[0][0] == "Karlskrona"
+    assert days[0][0] == f"Karlskrona ({today_iso})"
     assert days[0][1] == "15.0°C"
-    assert days[1][0] == "Karlskrona"
+    assert days[1][0] == f"Karlskrona ({tomorrow_iso})"
     assert days[1][1] == "16.0°C"
