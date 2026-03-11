@@ -1,8 +1,8 @@
 # Weather App
 
-Desktop application for tracking weather on multiple cities on specific dates during a trip.
+A desktop application for tracking the weather in multiple cities on specific dates during a trip.
 
-Developed as final project for the Software Testing course at BTH.
+Developed as a project for the Software Testing course at BTH.
 
 ## Dependencies
 
@@ -15,20 +15,19 @@ The project relies on a set of external libraries that provide the following fun
 
 ## Development environment
 
-We will use the Git CLI as the version control software and GitHub as the remote repository.
+We will use Git for version control and GitHub as the remote repository.
 
 ## CI Environment
 
-To implement a continuous integration environment we will use GitHub Actions, which will run our tests every time someone pushes a commit to the repository.
+To implement a continuous integration environment, we will use GitHub Actions to run our tests whenever someone pushes a commit to the repository.
 
 ## Requirements
 
-1. Trip Configuration (Main Page)
+1. Trip Configuration
 
 - REQ-1.1: The app shall allow users to add multiple cities with a number of days representing how long the user will stay there to a trip list.
 - REQ-1.2: The trip should have a start date
-- REQ-1.3 (Constraints): The total duration of the trip shall not exceed 14 days.
-- REQ-1.4: The user shall be able to remove a city from the list before searching.
+- REQ-1.3 (Constraints): The total duration of the trip shall not exceed 14 days into the future (for getting a reasonable forecast).
 
 2. Weather Data Integration
 
@@ -38,6 +37,5 @@ To implement a continuous integration environment we will use GitHub Actions, wh
 
 3. Display & Visualization (Results Page)
 
-- REQ-3.1: Results shall be displayed in a grid or scrollable list of "Weather Squares."
-- REQ-3.2: Each square must contain: Date, City Name, Temperature, and a Short Description.
-- REQ-3.3: The results page shall include a "Back" button to return to the Trip Configuration page.
+- REQ-3.1: Results shall be displayed in a list
+- REQ-3.2: Each entry must contain: Date, City Name, Temperature, and a Short Description.
