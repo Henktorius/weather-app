@@ -56,6 +56,7 @@ def interpret_weathercode(code: int) -> str:
 
 # ── Geocoding ─────────────────────────────────────────────────────────────────
 
+
 def get_coordinates(city_name: str) -> tuple[float, float]:
     """
     Use the Open-Meteo Geocoding API to resolve *city_name* into
@@ -84,6 +85,7 @@ def get_coordinates(city_name: str) -> tuple[float, float]:
 
 
 # ── Weather forecast ──────────────────────────────────────────────────────────
+
 
 def get_weather(city_name: str, date: datetime.date, end: datetime.date) -> list[dict]:
     """
@@ -128,26 +130,30 @@ def get_weather(city_name: str, date: datetime.date, end: datetime.date) -> list
     times = daily.get("time", [])
 
     if not times:
-        return [{
-            "city": city_name,
-            "date": date_str,
-            "max_temp": None,
-            "min_temp": None,
-            "condition": "Data Unavailable",
-        }]
+        return [
+            {
+                "city": city_name,
+                "date": date_str,
+                "max_temp": None,
+                "min_temp": None,
+                "condition": "Data Unavailable",
+            }
+        ]
 
     forecasts = []
     for i, t in enumerate(times):
         max_temp = daily["temperature_2m_max"][i]
         min_temp = daily["temperature_2m_min"][i]
         weathercode = daily["weathercode"][i]
-        
-        forecasts.append({
-            "city": city_name,
-            "date": t,
-            "max_temp": max_temp,
-            "min_temp": min_temp,
-            "condition": interpret_weathercode(weathercode),
-        })
+
+        forecasts.append(
+            {
+                "city": city_name,
+                "date": t,
+                "max_temp": max_temp,
+                "min_temp": min_temp,
+                "condition": interpret_weathercode(weathercode),
+            }
+        )
 
     return forecasts
