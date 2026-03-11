@@ -4,8 +4,10 @@ from tkinter import messagebox
 
 from tkcalendar import DateEntry
 
-from src.api_client import get_weather
-
+try:
+    from src.api_client import get_weather
+except ImportError:
+    from api_client import get_weather
 
 class Trip:
     def __init__(self, startdate: datetime.date):
