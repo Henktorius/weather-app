@@ -2,7 +2,7 @@ import tkinter as tk
 
 import pytest
 
-from src.weather_app import WeatherApp
+from weather_app import WeatherApp
 
 
 @pytest.fixture(scope="session")
