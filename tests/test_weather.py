@@ -48,3 +48,49 @@ def test_weather_data(mock_get_weather, app):
     assert days[0][1] == "15.0°C"
     assert days[1][0] == "Karlskrona"
     assert days[1][1] == "16.0°C"
+
+
+class TestInvalidInputs:
+    def test_invalid_city_input(self, app):
+        city = app.root.nametowidget("city_entry")
+        city.delete(0, tk.END)
+        city.insert(0, "123")
+
+        duration = app.root.nametowidget("duration_entry")
+        duration.delete(0, tk.END)
+        duration.insert(0, "2")
+
+        with patch("tkinter.messagebox.showerror") as mock_showerror:
+            app.submit_btn.invoke()
+            mock_showerror.assert_called_with("Error", "Please enter a city")
+
+    def test_invalid_duration_input(self, app):
+        city = app.root.nametowidget("city_entry")
+        city.delete(0, tk.END)
+        city.insert(0, "Karlskrona")
+
+        duration = app.root.nametowidget("duration_entry")
+        duration.delete(0, tk.END)
+        duration.insert(0, "-1")
+
+        with patch("tkinter.messagebox.showerror") as mock_showerror:
+            app.submit_btn.invoke()
+            mock_showerror.assert_called_with("Error", "Please enter a valid duration")
+
+    def test_invalid_startdate_input(self, app):
+        city = app.root.nametowidget("city_entry")
+        city.delete(0, tk.END)
+        city.insert(0, "Karlskrona")
+
+        duration = app.root.nametowidget("duration_entry")
+        duration.delete(0, tk.END)
+        duration.insert(0, "2")
+
+        date = app.startdatepicker
+        date.set_date(datetime.date.today() - datetime.timedelta(days=1))
+
+        with patch("tkinter.messagebox.showerror") as mock_showerror:
+            app.submit_btn.invoke()
+            mock_showerror.assert_called_with(
+                "Error", "Please select a valid startdate"
+            )
