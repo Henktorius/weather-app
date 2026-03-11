@@ -28,6 +28,10 @@ class TestGUIComponents:
         forecast_container = app.root.nametowidget("forecast_container")
         assert forecast_container.winfo_exists()
 
+    def test_bg_color(self, app):
+        # Check that the background color of the root window is not the default gray
+        assert app.root.cget("bg") != "SystemButtonFace"
+
 
 class TestForecastDisplay:
     def test_initial_state(self, app):
@@ -36,10 +40,23 @@ class TestForecastDisplay:
         forecast_container = app.root.nametowidget("forecast_container")
         assert len(forecast_container.winfo_children()) == 0
 
+    def test_header_display(self, app):
+        """Check that the forecast container displays the correct header."""
+        app._create_forecast_container()
+        app.forecast_container.update()
+        rows = app.forecast_container.winfo_children()
+        assert len(rows) == 1
+        header_data = rows[0].winfo_children()
+        assert header_data[0].cget("text") == "Day"
+        assert header_data[1].cget("text") == ""
+        assert header_data[2].cget("text") == "Date"
+        assert header_data[3].cget("text") == "City"
+        assert header_data[4].cget("text") == "Temperature"
+
     def test_column_content(self, app):
         """Check if the forecast container displays the correct column content."""
 
-        app.add_forecast_row("Karlskrona", "5.0°C")
+        app._add_forecast_row("Karlskrona", "5.0°C")
         app.forecast_container.update()
         rows = app.forecast_container.winfo_children()
         assert len(rows) == 1
@@ -52,8 +69,8 @@ class TestForecastDisplay:
 
     def test_multiple_rows(self, app):
         """Check that multiple rows are added correctly to the forecast container."""
-        app.add_forecast_row("Karlskrona", "5.0°C")
-        app.add_forecast_row("Stockholm", "10.0°C")
+        app._add_forecast_row("Karlskrona", "5.0°C")
+        app._add_forecast_row("Stockholm", "10.0°C")
         app.forecast_container.update()
         rows = app.forecast_container.winfo_children()
         assert len(rows) == 2
