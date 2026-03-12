@@ -117,6 +117,14 @@ class WeatherApp:
             messagebox.showerror("Error", "Please enter a valid duration")
             raise ValueError("Please enter a valid duration")
 
+        remaining = 14 - len(self.trip)
+        if int(self.duration_input.get()) > remaining:
+            messagebox.showerror(
+                "Error",
+                f"Maximum 14 forecast days allowed. You can add up to {remaining} more day(s).",
+            )
+            raise ValueError("Exceeds 14-day forecast limit")
+
     def get_data(self):
         self._validate_inputs()
 

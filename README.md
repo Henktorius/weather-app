@@ -13,6 +13,21 @@ The project relies on a set of external libraries that provide the following fun
 - Mocking API: pytest-mock
 - External API: requests
 
+## How to run the application
+
+1. Clone the repository
+
+2. Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+3. Run the application:
+
+```bash
+python src/weather_app.py
+```
+
 ## Development environment
 
 We will use Git for version control and GitHub as the remote repository.
