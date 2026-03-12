@@ -65,6 +65,10 @@ class WeatherApp:
         self.forecast_row_count = 0
         
         self.empty_button.config(state="disabled")
+        self.duration_input.configure(state="normal")
+        self.startdatepicker.configure(state="normal")
+        self.city_input.configure(state="normal")
+        self.submit_btn.config(state="normal")
 
     def _create_input_widgets(self):
         root = self.root
