@@ -2,6 +2,8 @@ import datetime
 import tkinter as tk
 from unittest.mock import patch
 
+import pytest
+
 
 class TestGUIComponents:
     """Check if all necessary components are present."""
@@ -121,3 +123,62 @@ class TestStartdateDisabled:
         app.get_data()
 
         assert str(app.startdatepicker.cget("state")) == "disabled"
+
+
+class TestMaxForecastDays:
+    MAX_DAYS = 14
+
+    def _make_mock_forecast(self, days):
+        today = datetime.date.today()
+        return [
+            {
+                "date": (today + datetime.timedelta(days=i)).isoformat(),
+                "max_temp": 10.0 + i,
+                "min_temp": 3.0,
+                "condition": "Clear sky",
+            }
+            for i in range(days)
+        ]
+
+    def _submit_city(self, app, city, duration):
+        app.city_input.delete(0, tk.END)
+        app.city_input.insert(0, city)
+        app.duration_input.delete(0, tk.END)
+        app.duration_input.insert(0, str(duration))
+        app.startdatepicker.set_date(datetime.date.today())
+        app.get_data()
+
+    @patch("src.weather_app.get_weather")
+    def test_inputs_disabled_at_14_days(self, mock_get_weather, app):
+        """Submit button, city input, and duration input are disabled after 14 days are filled."""
+        mock_get_weather.return_value = self._make_mock_forecast(14)
+        self._submit_city(app, "Karlskrona", 14)
+
+        assert len(app.trip) == 14
+        assert str(app.submit_btn.cget("state")) == "disabled"
+        assert str(app.city_input.cget("state")) == "disabled"
+        assert str(app.duration_input.cget("state")) == "disabled"
+
+    @patch("src.weather_app.get_weather")
+    def test_spinbox_max_updates_after_submit(self, mock_get_weather, app):
+        """Duration spinbox max should reflect remaining days after a submission."""
+        mock_get_weather.return_value = self._make_mock_forecast(5)
+        self._submit_city(app, "Karlskrona", 5)
+
+        assert len(app.trip) == 5
+        assert int(float(app.duration_input.cget("to"))) == 9
+
+    @patch("src.weather_app.get_weather")
+    def test_reject_duration_exceeding_remaining(self, mock_get_weather, app):
+        """Adding a city whose duration would exceed 14 total days should raise an error."""
+        mock_get_weather.return_value = self._make_mock_forecast(10)
+        self._submit_city(app, "Stockholm", 10)
+
+        assert len(app.trip) == 10
+
+        with patch("tkinter.messagebox.showerror"):
+            with pytest.raises(ValueError):
+                self._submit_city(app, "Gothenburg", 5)
+
+        # Trip length should not have changed
+        assert len(app.trip) == 10

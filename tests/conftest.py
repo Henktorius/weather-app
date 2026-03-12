@@ -24,6 +24,11 @@ def app(_app_session):
     # Re-enable the start date picker
     _app_session.startdatepicker.configure(state="normal")
 
+    # Re-enable inputs that may have been disabled at 14-day limit
+    _app_session.submit_btn.configure(state="normal")
+    _app_session.city_input.configure(state="normal")
+    _app_session.duration_input.configure(state="normal", to=14)
+
     # Clear the UI elements created during previous tests
     for widget in _app_session.forecast_container.winfo_children():
         widget.destroy()
