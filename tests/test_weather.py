@@ -46,8 +46,13 @@ def test_weather_data(mock_get_weather, app):
     days = app.trip.get_days()
     assert days[0][0] == "Karlskrona"
     assert days[0][1] == "15.0°C"
+    assert days[0][2] == "5.0°C"
+    assert days[0][3] == "Clear sky"
+
     assert days[1][0] == "Karlskrona"
     assert days[1][1] == "16.0°C"
+    assert days[1][2] == "6.0°C"
+    assert days[1][3] == "Partly cloudy"
 
 
 class TestInvalidInputs:

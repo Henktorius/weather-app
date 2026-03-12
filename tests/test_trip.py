@@ -13,9 +13,9 @@ def test_trip_initialization():
 def test_add_day():
     """Test that adding a day to the trip works correctly."""
     trip = Trip(datetime.date(2024, 1, 1))
-    trip.add_day(("2024-01-01", 20.5))
+    trip.add_day(("2024-01-01", "20.5°C", "10ºC", "Clear sky"))
     assert len(trip.days) == 1
-    assert trip.days[0] == ("2024-01-01", 20.5)
+    assert trip.days[0] == ("2024-01-01", "20.5°C", "10ºC", "Clear sky")
 
 
 def test_update_startdate():
