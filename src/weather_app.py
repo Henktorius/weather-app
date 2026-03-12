@@ -134,6 +134,8 @@ class WeatherApp:
         for city_name, temp_val in self.trip.days[-duration:]:
             self._add_forecast_row(city_name, temp_val)
 
+        self.startdatepicker.configure(state="disabled")
+
     def _add_forecast_row(self, city, temp):
         row = tk.Frame(self.forecast_container, relief="groove", borderwidth=1)
         row.pack(fill="x", pady=2)
