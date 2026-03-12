@@ -51,6 +51,21 @@ class WeatherApp:
         self._create_input_widgets()
         self._create_forecast_container()
 
+    
+    def empty_trip(self):
+        for widget in self.forecast_container.winfo_children():
+            widget.destroy()
+
+        header = tk.Frame(self.forecast_container, relief="groove", borderwidth=1)
+        header.pack(fill="x", pady=2)
+        for col, (text, width) in enumerate(self.HEADER_COLUMNS):
+            tk.Label(header, text=text, width=width, anchor="w").grid(row=0, column=col, padx=5)
+
+        self.trip.days = []
+        self.forecast_row_count = 0
+        
+        self.empty_button.config(state="disabled")
+
     def _create_input_widgets(self):
         root = self.root
         pad = dict(padx=10, pady=10, sticky="w")
@@ -82,6 +97,11 @@ class WeatherApp:
             root, text="Add City", command=self.get_data, name="submit_btn"
         )
         self.submit_btn.grid(row=2, column=3, **pad)
+
+        self.empty_button = tk.Button(
+            root, text="Empty Trip", command=self.empty_trip, name="delete_btn", state="disabled"
+        )
+        self.empty_button.grid(row=2, column=4, **pad)
 
     def _create_forecast_container(self):
         self.forecast_container = tk.Frame(self.root, name="forecast_container")
@@ -134,6 +154,10 @@ class WeatherApp:
         first_day = start_date + datetime.timedelta(days=len(self.trip))
         last_day = first_day + datetime.timedelta(days=duration - 1)
         forecast = get_weather(city, first_day, last_day)
+
+        if len(forecast) != 0:
+            self.empty_button.config(state="normal")
+            
 
         # fill datastructure
         for day_data in forecast:
