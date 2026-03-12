@@ -34,13 +34,15 @@ class WeatherApp:
         ("", 15),
         ("Date", 15),
         ("City", 15),
-        ("Temperature", 15),
+        ("Max Temp", 15),
+        ("Min Temp", 15),
+        ("Condition", 20),
     ]
 
     def __init__(self, root):
         self.root = root
         self.root.title("Travel Weather")
-        self.root.geometry("800x600")
+        self.root.geometry("1000x800")
         self.root.configure(bg="lightblue")
 
         self.trip = Trip(datetime.date.today())
@@ -128,15 +130,20 @@ class WeatherApp:
         # fill datastructure
         for day_data in forecast:
             max_temp = day_data["max_temp"]
-            temp_str = f"{max_temp}°C" if max_temp is not None else "N/A"
-            self.trip.add_day((city, temp_str))
+            min_temp = day_data.get("min_temp")
+            condition = day_data.get("condition", "")
 
-        for city_name, temp_val in self.trip.days[-duration:]:
-            self._add_forecast_row(city_name, temp_val)
+            max_str = f"{max_temp}°C" if max_temp is not None else "N/A"
+            min_str = f"{min_temp}°C" if min_temp is not None else "N/A"
+
+            self.trip.add_day((city, max_str, min_str, condition))
+
+        for city_name, max_val, min_val, cond in self.trip.days[-duration:]:
+            self._add_forecast_row(city_name, max_val, min_val, cond)
 
         self.startdatepicker.configure(state="disabled")
 
-    def _add_forecast_row(self, city, temp):
+    def _add_forecast_row(self, city, max_temp, min_temp, condition):
         row = tk.Frame(self.forecast_container, relief="groove", borderwidth=1)
         row.pack(fill="x", pady=2)
 
@@ -149,7 +156,9 @@ class WeatherApp:
             (display_date.strftime("%A"), 15),
             (display_date.strftime("%d.%m.%Y"), 15),
             (city, 15),
-            (temp, 15),
+            (max_temp, 15),
+            (min_temp, 15),
+            (condition, 20),
         ]
         for col, (text, width) in enumerate(columns):
             tk.Label(row, text=text, width=width, anchor="w").grid(
