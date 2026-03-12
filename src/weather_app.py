@@ -151,6 +151,14 @@ class WeatherApp:
 
         self.startdatepicker.configure(state="disabled")
 
+        remaining = 14 - len(self.trip)
+        if remaining <= 0:
+            self.submit_btn.configure(state="disabled")
+            self.city_input.configure(state="disabled")
+            self.duration_input.configure(state="disabled")
+        else:
+            self.duration_input.configure(to=remaining)
+
     def _add_forecast_row(self, city, max_temp, min_temp, condition):
         row = tk.Frame(self.forecast_container, relief="groove", borderwidth=1)
         row.pack(fill="x", pady=2)
