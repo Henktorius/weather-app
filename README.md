@@ -28,6 +28,7 @@ To implement a continuous integration environment, we will use GitHub Actions to
 - REQ-1.1: The app shall allow users to add multiple cities with a number of days representing how long the user will stay there to a trip list.
 - REQ-1.2: The trip should have a start date
 - REQ-1.3 (Constraints): The total duration of the trip shall not exceed 14 days into the future (for getting a reasonable forecast).
+- REQ-1.4: THe app shall have an "Empty Trip" button which will allow to clear all the entries in the weather table
 
 2. Weather Data Integration
 
