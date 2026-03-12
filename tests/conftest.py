@@ -21,6 +21,9 @@ def app(_app_session):
     _app_session.trip.days.clear()
     _app_session.forecast_row_count = 0
 
+    # Re-enable the start date picker
+    _app_session.startdatepicker.configure(state="normal")
+
     # Clear the UI elements created during previous tests
     for widget in _app_session.forecast_container.winfo_children():
         widget.destroy()

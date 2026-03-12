@@ -1,4 +1,6 @@
 import datetime
+import tkinter as tk
+from unittest.mock import patch
 
 
 class TestGUIComponents:
@@ -91,3 +93,31 @@ class TestForecastDisplay:
         assert row1_data[4].cget("text") == "5.0°C"
         assert row2_data[3].cget("text") == "Stockholm"
         assert row2_data[4].cget("text") == "10.0°C"
+
+
+class TestStartdateDisabled:
+    def test_startdate_enabled_before_submit(self, app):
+        """Start date picker should be enabled before any submission."""
+        assert str(app.startdatepicker.cget("state")) != "disabled"
+
+    @patch("src.weather_app.get_weather")
+    def test_startdate_disabled_after_submit(self, mock_get_weather, app):
+        """Start date picker should be disabled after the first submission."""
+        mock_get_weather.return_value = [
+            {
+                "date": datetime.date.today().isoformat(),
+                "max_temp": 10.0,
+                "min_temp": 3.0,
+                "condition": "Clear sky",
+            },
+        ]
+
+        app.city_input.delete(0, tk.END)
+        app.city_input.insert(0, "Karlskrona")
+        app.duration_input.delete(0, tk.END)
+        app.duration_input.insert(0, "1")
+        app.startdatepicker.set_date(datetime.date.today())
+
+        app.get_data()
+
+        assert str(app.startdatepicker.cget("state")) == "disabled"
