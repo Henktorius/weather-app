@@ -53,12 +53,14 @@ class TestForecastDisplay:
         assert header_data[1].cget("text") == ""
         assert header_data[2].cget("text") == "Date"
         assert header_data[3].cget("text") == "City"
-        assert header_data[4].cget("text") == "Temperature"
+        assert header_data[4].cget("text") == "Max Temp"
+        assert header_data[5].cget("text") == "Min Temp"
+        assert header_data[6].cget("text") == "Condition"
 
     def test_column_content(self, app):
         """Check if the forecast container displays the correct column content."""
 
-        app._add_forecast_row("Karlskrona", "5.0°C")
+        app._add_forecast_row("Karlskrona", "5.0°C", "1.0°C", "Clear sky")
         app.forecast_container.update()
         rows = app.forecast_container.winfo_children()
         assert len(rows) == 1
@@ -68,11 +70,14 @@ class TestForecastDisplay:
         assert row_data[2].cget("text") == datetime.date.today().strftime("%d.%m.%Y")
         assert row_data[3].cget("text") == "Karlskrona"
         assert row_data[4].cget("text") == "5.0°C"
+        assert row_data[5].cget("text") == "1.0°C"
+        assert row_data[6].cget("text") == "Clear sky"
 
     def test_multiple_rows(self, app):
         """Check that multiple rows are added correctly to the forecast container."""
-        app._add_forecast_row("Karlskrona", "5.0°C")
-        app._add_forecast_row("Stockholm", "10.0°C")
+
+        app._add_forecast_row("Karlskrona", "5.0°C", "1.0°C", "Clear sky")
+        app._add_forecast_row("Stockholm", "10.0°C", "5.0°C", "Rainy")
         app.forecast_container.update()
         rows = app.forecast_container.winfo_children()
         assert len(rows) == 2
@@ -91,8 +96,13 @@ class TestForecastDisplay:
 
         assert row1_data[3].cget("text") == "Karlskrona"
         assert row1_data[4].cget("text") == "5.0°C"
+        assert row1_data[5].cget("text") == "1.0°C"
+        assert row1_data[6].cget("text") == "Clear sky"
+
         assert row2_data[3].cget("text") == "Stockholm"
         assert row2_data[4].cget("text") == "10.0°C"
+        assert row2_data[5].cget("text") == "5.0°C"
+        assert row2_data[6].cget("text") == "Rainy"
 
 
 class TestStartdateDisabled:
