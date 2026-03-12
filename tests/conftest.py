@@ -19,6 +19,7 @@ def app(_app_session):
     """Yields the session app but resets its data structures and UI before each test."""
     # Reset the trip data structure
     _app_session.trip.days.clear()
+    _app_session.forecast_row_count = 0
 
     # Clear the UI elements created during previous tests
     for widget in _app_session.forecast_container.winfo_children():

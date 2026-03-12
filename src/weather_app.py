@@ -44,6 +44,7 @@ class WeatherApp:
         self.root.configure(bg="lightblue")
 
         self.trip = Trip(datetime.date.today())
+        self.forecast_row_count = 0
 
         self._create_input_widgets()
         self._create_forecast_container()
@@ -137,7 +138,8 @@ class WeatherApp:
         row = tk.Frame(self.forecast_container, relief="groove", borderwidth=1)
         row.pack(fill="x", pady=2)
 
-        row_num = len(self.forecast_container.winfo_children())
+        self.forecast_row_count += 1
+        row_num = self.forecast_row_count
         display_date = self.trip.startdate + datetime.timedelta(days=row_num - 1)
 
         columns = [
