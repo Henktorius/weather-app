@@ -115,6 +115,14 @@ class WeatherApp:
             messagebox.showerror("Error", "Please enter a valid duration")
             raise ValueError("Please enter a valid duration")
 
+        remaining = 14 - len(self.trip)
+        if int(self.duration_input.get()) > remaining:
+            messagebox.showerror(
+                "Error",
+                f"Maximum 14 forecast days allowed. You can add up to {remaining} more day(s).",
+            )
+            raise ValueError("Exceeds 14-day forecast limit")
+
     def get_data(self):
         self._validate_inputs()
 
@@ -135,6 +143,14 @@ class WeatherApp:
             self._add_forecast_row(city_name, temp_val)
 
         self.startdatepicker.configure(state="disabled")
+
+        remaining = 14 - len(self.trip)
+        if remaining <= 0:
+            self.submit_btn.configure(state="disabled")
+            self.city_input.configure(state="disabled")
+            self.duration_input.configure(state="disabled")
+        else:
+            self.duration_input.configure(to=remaining)
 
     def _add_forecast_row(self, city, temp):
         row = tk.Frame(self.forecast_container, relief="groove", borderwidth=1)
